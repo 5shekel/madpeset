@@ -1,6 +1,10 @@
 ```py
 brother_ql -b pyusb -m QL-550 -p usb://0x04f9:0x2016 print -l 62 pefectFake.jpg --dither
 ```
+```
+byobu new-window -n 'printer' 'cd ~/printBash && bash switch.sh'
+```
+
 
 To command the camera in the terminal I suggest to use the fswebcam package. To install:
 

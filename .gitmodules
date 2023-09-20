@@ -1,0 +1,3 @@
+[submodule "fonts/xbmc-hebrew-fonts"]
+	path = fonts/xbmc-hebrew-fonts
+	url = https://github.com/kodi-il/xbmc-hebrew-fonts.git
