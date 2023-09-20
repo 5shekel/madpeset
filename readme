@@ -1,0 +1,25 @@
+```py
+brother_ql -b pyusb -m QL-550 -p usb://0x04f9:0x2016 print -l 62 pefectFake.jpg --dither
+```
+
+To command the camera in the terminal I suggest to use the fswebcam package. To install:
+
+`sudo apt install fswebcam`
+
+To take an image with a certain resolution and hide the standard banner:
+
+`fswebcam -r 1280x720 --no-banner /images/image1.jpg`
+
+To find the supported webcam resolutions:
+
+`v4l2-ctl --list-formats-ext`
+
+You could also use ffmpeg to take images and video. To install:
+
+`sudo apt install ffmpeg`
+
+To take an image:
+
+`ffmpeg -f v4l2 -video_size 1280x720 -i /dev/video0 -frames 1 out.jpg`
+
+A more advanced alternative is mjpeg-streamer, which enables you to stream the camera in a browser. You can find a detailed tutorial how to set that up here.
