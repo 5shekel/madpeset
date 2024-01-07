@@ -5,6 +5,20 @@ brother_ql -b pyusb -m QL-550 -p usb://0x04f9:0x2016 print -l 62 pefectFake.jpg 
 byobu new-window -n 'printer' 'cd ~/printBash && bash switch.sh'
 ```
 
+```
+
+
+
+
+sudo systemctl daemon-reload 
+#to reload the systemd manager configuration.
+#Run 
+sudo systemctl enable switch.service 
+#to enable the service to start at boot.
+#Run 
+sudo systemctl start switch.service 
+#to start the service immediately.
+```
 
 To command the camera in the terminal I suggest to use the fswebcam package. To install:
 

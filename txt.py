@@ -63,24 +63,26 @@ def map_to_keyboard_hebrew(input_text):
 
 def rtl_text_wrap(text, width):
     words = text.split()
-    # Reverse the order of words for RTL language
-    words = words[::-1]
-
     lines = []
     current_line = []
     current_line_length = 0
 
-    for word in words:  # No need to reverse the words list again
+    for word in words:
         if current_line_length + len(word) <= width:
-            current_line.append(word)
-            current_line_length += len(word) + 1  # +1 for the space
+            current_line.insert(0, word)  # Insert word at the beginning of the current line
+            current_line_length += len(word) + 1
         else:
+            # When the line exceeds the width, finalize the current line
             lines.append(' '.join(current_line))
             current_line = [word]
             current_line_length = len(word) + 1
 
-    lines.append(' '.join(current_line))  # Add the last line
+    # Add the last line to the lines list
+    lines.append(' '.join(current_line))
+
     return '\n'.join(lines)
+
+
 
 
 
