@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 
 import logging
 import argparse
@@ -54,7 +55,8 @@ def map_to_keyboard_hebrew(input_text):
         'i': 'ן',
         'l': 'ך',
         '/': '.',
-        '\/': ','
+        '\/': ',',
+        '@': '"',
         # Add any other characters you want to map
     }
     
