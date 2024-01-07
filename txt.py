@@ -38,11 +38,14 @@ def map_to_keyboard_hebrew(input_text):
         'f': 'כ',
         'k': 'ל',
         'n': 'מ',
+        'o': 'ם',
         'b': 'נ',
+        'i': 'ן',
         'x': 'ס',
         'g': 'ע',
         'p': 'פ',
         'm': 'צ',
+        '.': 'ץ',
         'e': 'ק',
         'r': 'ר',
         'a': 'ש',
@@ -50,6 +53,8 @@ def map_to_keyboard_hebrew(input_text):
         ';': 'ף',
         'i': 'ן',
         'l': 'ך',
+        '/': '.',
+        '\/': ','
         # Add any other characters you want to map
     }
     
@@ -58,21 +63,25 @@ def map_to_keyboard_hebrew(input_text):
 
 def rtl_text_wrap(text, width):
     words = text.split()
+    # Reverse the order of words for RTL language
+    words = words[::-1]
+
     lines = []
     current_line = []
     current_line_length = 0
 
-    for word in reversed(words):  # Reverse words for RTL
+    for word in words:  # No need to reverse the words list again
         if current_line_length + len(word) <= width:
             current_line.append(word)
             current_line_length += len(word) + 1  # +1 for the space
         else:
-            lines.append(' '.join(reversed(current_line)))  # Reverse back to original
+            lines.append(' '.join(current_line))
             current_line = [word]
-            current_line_length = len(word) + 1  # +1 for the space
+            current_line_length = len(word) + 1
 
-    lines.append(' '.join(reversed(current_line)))  # Add the last line
+    lines.append(' '.join(current_line))  # Add the last line
     return '\n'.join(lines)
+
 
 
 while True:
