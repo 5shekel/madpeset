@@ -6,7 +6,7 @@ import subprocess
 import textwrap
 import threading
 from queue import Queue
-import keyboard
+
 # Initialize logging
 logging.basicConfig(filename='your_log_file.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -18,49 +18,62 @@ args = parser.parse_args()
 def camera():
     print("cam")
     webcam_command = "fswebcam webcam.jpg ;  brother_ql -b pyusb -m QL-550 -p usb://0x04f9:0x2016 print -l 62 --dither webcam.jpg"
-    print_queue.add_to_queue(webcam_command)
     subprocess.run(webcam_command, shell=True)
 
     logging.info("Arrow key pressed. Webcam photo command added to queue.")
 
 
-# A Python function to map ASCII characters to their Hebrew counterparts
-def map_to_hebrew(input_text):
-    # Mapping of ASCII to Hebrew characters
-    ascii_to_hebrew = {
-        'a': 'א',
-        'b': 'ב',
-        'c': 'ג',
-        'd': 'ד',
-        'e': 'ה',
-        'f': 'ו',
-        'g': 'ז',
-        'h': 'ח',
-        'i': 'ט',
-        'j': 'י',
-        'k': 'כ',
-        'l': 'ל',
-        'm': 'מ',
-        'n': 'נ',
-        'o': 'ס',
-        'p': 'ע',
-        'q': 'פ',
-        'r': 'צ',
-        's': 'ק',
-        't': 'ר',
-        'u': 'ש',
-        'v': 'ת',
-        'w': 'ץ',
-        'x': 'ך',
-        'y': 'ן',
-        'z': 'ם',
+def map_to_keyboard_hebrew(input_text):
+    keyboard_to_hebrew = {
+        't': 'א',
+        'c': 'ב',
+        'd': 'ג',
+        's': 'ד',
+        'v': 'ה',
+        'u': 'ו',
+        'z': 'ז',
+        'j': 'ח',
+        'y': 'ט',
+        'h': 'י',
+        'f': 'כ',
+        'k': 'ל',
+        'n': 'מ',
+        'b': 'נ',
+        'x': 'ס',
+        'g': 'ע',
+        'p': 'פ',
+        'm': 'צ',
+        'e': 'ק',
+        'r': 'ר',
+        'a': 'ש',
+        ',': 'ת',
+        ';': 'ף',
+        'i': 'ן',
+        'l': 'ך',
         # Add any other characters you want to map
     }
     
-    # Convert the input text
-    output_text = ''.join([ascii_to_hebrew.get(char, char) for char in input_text.lower()])
-    
+    output_text = ''.join([keyboard_to_hebrew.get(char, char) for char in input_text.lower()])    
     return output_text
+
+def rtl_text_wrap(text, width):
+    words = text.split()
+    lines = []
+    current_line = []
+    current_line_length = 0
+
+    for word in reversed(words):  # Reverse words for RTL
+        if current_line_length + len(word) <= width:
+            current_line.append(word)
+            current_line_length += len(word) + 1  # +1 for the space
+        else:
+            lines.append(' '.join(reversed(current_line)))  # Reverse back to original
+            current_line = [word]
+            current_line_length = len(word) + 1  # +1 for the space
+
+    lines.append(' '.join(reversed(current_line)))  # Add the last line
+    return '\n'.join(lines)
+
 
 while True:
     user_input = input("Type something (or press Enter to generate image): ")
@@ -68,12 +81,19 @@ while True:
     if user_input =="+":
         camera()
     elif user_input != "":
-
-        mapped_text = map_to_hebrew(user_input)
-
-        logging.info("Generating image...")
         img_width = 696
-        wrapped_text = textwrap.fill(mapped_text, width=8)
+        
+        # Step 1: Map to Hebrew
+        mapped_text = map_to_keyboard_hebrew(user_input)
+        print("mapped "+mapped_text)
+        logging.info("Generating image...")
+        # Reverse characters within each word
+        reversed_within_words = ' '.join([word[::-1] for word in mapped_text.split()])
+        wrapped_text = rtl_text_wrap(reversed_within_words, 8)
+
+        # wrapped_text = textwrap.fill(reversed_within_words, width=8)
+        print("warp: "+wrapped_text)
+
         num_lines = wrapped_text.count('\n') + 1
         font_size = img_width // 6
         ttfont="/home/tasmi/printme/5x5-Tami.ttf"
@@ -87,8 +107,10 @@ while True:
         text_width, text_height = d.textsize(wrapped_text, font=font)
         x = (img_width - text_width) // 2
         y = (img_height - text_height) // 2
+
         d.text((x, y), wrapped_text, font=font, fill=(0, 0, 0))
         image.save("output.png")
+        
 
         printer_ql550="0x2016"
         printer_id1="000M6Z401370"
