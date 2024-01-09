@@ -5,7 +5,7 @@ git submodule update --init --recursive
 
 python -m venv venv
 source venv/bin/activate
-pip install pillow brother_ql
+pip install pillow==9.5.0 brother_ql
 ```
 to get the camera working, you need to install the drivers for the camera. I used the [official guide](https://www.raspberrypi.org/documentation/configuration/camera.md) to install the drivers.
 
