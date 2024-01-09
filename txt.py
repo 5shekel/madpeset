@@ -1,12 +1,8 @@
 # -*- coding: utf-8 -*-
 import os
-import logging
 import argparse
 from PIL import Image, ImageDraw, ImageFont
 import subprocess
-
-# Initialize logging
-logging.basicConfig(filename='your_log_file.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Get the current user's username
 username = os.getlogin()
@@ -85,8 +81,7 @@ def rtl_text_wrap(text, width):
 
 
 while True:
-    user_input = input("Type something (or press Enter to generate image): ")
-    logging.info(f"User input: {user_input}")
+    user_input = input("Type something (or press + for camera): ")
     if user_input =="+":
         camera()
     elif user_input != "":
@@ -95,7 +90,6 @@ while True:
         # Step 1: Map to Hebrew
         mapped_text = map_to_keyboard_hebrew(user_input)
         print("mapped "+mapped_text)
-        logging.info("Generating image...")
         # Reverse characters within each word
         reversed_within_words = ' '.join([word[::-1] for word in mapped_text.split()])
         wrapped_text = rtl_text_wrap(reversed_within_words, 8)
@@ -125,5 +119,3 @@ while True:
         command = f"/home/{username}/.local/bin/brother_ql -b pyusb --model QL-550 -p usb://0x04f9:{printer_ql550}/{printer_id1} print -l 62 output.png"
         subprocess.run(command, shell=True)
     
-# Uncomment this line if you'd like to listen for arrow key events.
-# keyboard.on_press_key("up", on_arrow_key)
