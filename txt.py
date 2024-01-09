@@ -1,28 +1,24 @@
 # -*- coding: utf-8 -*-
-
+import os
 import logging
 import argparse
 from PIL import Image, ImageDraw, ImageFont
 import subprocess
-import textwrap
-import threading
-from queue import Queue
 
 # Initialize logging
 logging.basicConfig(filename='your_log_file.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
+# Get the current user's username
+username = os.getlogin()
+
 # CLI argument parsing
 parser = argparse.ArgumentParser(description="Image Generation and Printing")
-parser.add_argument('--threading', action='store_true', help="Use threading for print queue processing")
 args = parser.parse_args()
 
 def camera():
     print("cam")
-    webcam_command = "fswebcam webcam.jpg ;  brother_ql -b pyusb -m QL-550 -p usb://0x04f9:0x2016 print -l 62 --dither webcam.jpg"
+    webcam_command = "fswebcam webcam.jpg ;  /home/{username}/.local/bin/brother_ql -b pyusb -m QL-550 -p usb://0x04f9:0x2016 print -l 62 --dither webcam.jpg"
     subprocess.run(webcam_command, shell=True)
-
-    logging.info("Arrow key pressed. Webcam photo command added to queue.")
-
 
 def map_to_keyboard_hebrew(input_text):
     keyboard_to_hebrew = {
@@ -104,14 +100,13 @@ while True:
         reversed_within_words = ' '.join([word[::-1] for word in mapped_text.split()])
         wrapped_text = rtl_text_wrap(reversed_within_words, 8)
 
-        # wrapped_text = textwrap.fill(reversed_within_words, width=8)
         print("warp: "+wrapped_text)
 
         num_lines = wrapped_text.count('\n') + 1
         font_size = img_width // 6
-        ttfont="/home/tasmi/printme/5x5-Tami.ttf"
-        ttfont="/home/tasmi/printme/VarelaRound-Regular.ttf"
-        ttfont="/home/tasmi/printme/fonts/xbmc-hebrew-fonts/Roboto-Bold-xbmc-il.ttf"
+        ttfont="5x5-Tami.ttf"
+        ttfont="VarelaRound-Regular.ttf"
+        ttfont="fonts/xbmc-hebrew-fonts/Roboto-Bold-xbmc-il.ttf"
         font = ImageFont.truetype(ttfont, font_size)
         line_height = font_size + 10
         img_height = num_lines * line_height + 200
@@ -127,10 +122,8 @@ while True:
 
         printer_ql550="0x2016"
         printer_id1="000M6Z401370"
-        command = f"brother_ql -b pyusb --model QL-550 -p usb://0x04f9:{printer_ql550}/{printer_id1} print -l 62 output.png"
+        command = f"/home/{username}/.local/bin/brother_ql -b pyusb --model QL-550 -p usb://0x04f9:{printer_ql550}/{printer_id1} print -l 62 output.png"
         subprocess.run(command, shell=True)
-
-        logging.info("Image generated and print command added to queue. Returning to input.")
     
 # Uncomment this line if you'd like to listen for arrow key events.
 # keyboard.on_press_key("up", on_arrow_key)
