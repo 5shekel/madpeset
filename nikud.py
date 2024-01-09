@@ -10,6 +10,7 @@ load_dotenv()
 # Read API key from .env file
 api_key = os.getenv("API_KEY")
 
+
 def get_nakdan_response(hebrew_text, api_key):
     url = "https://nakdan-5-3.loadbalancer.dicta.org.il/addnikud"
     headers = {'Content-Type': 'text/plain;charset=utf-8'}
@@ -29,7 +30,7 @@ def get_nakdan_response(hebrew_text, api_key):
 
 
 # Create an image
-img = Image.new('RGB', (300, 100), color = (255, 255, 255))
+img = Image.new('RGB', (300, 100), color=(255, 255, 255))
 d = ImageDraw.Draw(img)
 ttfont = "fonts/xbmc-hebrew-fonts/Roboto-Bold-xbmc-il.ttf"
 ttfont = "fonts/BonaNova-Regular.ttf"
@@ -47,7 +48,12 @@ def main():
         response = get_nakdan_response(hebrew_text, api_key)
         # st.json(response)
         # Extract words
-        words = [option['w'] for item in response['data'] if 'nakdan' in item for option in item['nakdan'].get('options', [])]
+        words = [
+            option['w']
+            for item in response['data']
+            if 'nakdan' in item
+            for option in item['nakdan'].get('options', [])
+        ]
         st.text(words)
         # Create an image
         img = Image.new('RGB', (300, 100), color=(255, 255, 255))
@@ -61,8 +67,6 @@ def main():
             d.text((x, y), word, fill=(0, 0, 0), font=font)
             y += 15  # Move to the next line
         st.image(img)
-
-
 
 
 if __name__ == "__main__":
