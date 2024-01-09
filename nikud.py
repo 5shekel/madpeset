@@ -11,7 +11,9 @@ load_dotenv()
 # Read API key from .env file
 api_key = os.getenv("API_KEY")
 
-font = ImageFont.truetype("fonts/BonaNova-Regular.ttf", 40)
+# Specify the font size
+font_size = 40
+font = ImageFont.truetype("fonts/BonaNova-Regular.ttf", font_size)
 
 
 def get_nakdan_response(hebrew_text, api_key):
@@ -23,7 +25,7 @@ def get_nakdan_response(hebrew_text, api_key):
         "genre": "modern",  # or "rabbinic" or "premodern" based on user's need
         "data": hebrew_text,
         "addmorph": True,
-        "matchpartial": True, 
+        "matchpartial": True,
         "keepmetagim": False,
         "keepqq": False,
         "apiKey": api_key
@@ -41,7 +43,7 @@ def main():
     # Button to send request
     if st.button("Process Text"):
         response = get_nakdan_response(hebrew_text, api_key)
-        st.json(response)
+        # st.json(response)
         # Extract words
         words = [
             option['w'].replace("|", "")
@@ -49,19 +51,23 @@ def main():
             if 'nakdan' in item
             for option in item['nakdan'].get('options', [])
         ]
-        st.text(words)
+        st.text(" ".join(words))  # Print words after each other
+
         # Create an image
-        img = Image.new('RGB', (300, 400), color=(255, 255, 255))
+        img_width = 696
+        img_height = 400  # font_size * (len(words) // 10 + 2)  # Adjust the multiplier as needed
+        img = Image.new('RGB', (img_width, img_height), color=(255, 255, 255))
         d = ImageDraw.Draw(img)
 
         # Position for the first word
-        x, y = 10, 40
+        x, y = 10, 0
 
-        # Write words on the image
         for word in words:
             bidi_word = get_display(word)  # Convert word to RTL format
             d.text((x, y), bidi_word, fill=(0, 0, 0), font=font)
-            y += 45  # Move to the next line
+            st.text(f"Word: '{bidi_word}', Position: (x={x}, y={y}), {len(bidi_word)} characters")
+            y += 40  # Move to the next line
+
         st.image(img)
 
 

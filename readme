@@ -13,10 +13,12 @@ if you use a webcam try
 ```bash
 sudo apt install fswebcam
 ```
+### Fonts
+im using google fonts, you can download them from [here](https://fonts.google.com/?subset=hebrew&noto.script=Hebr) and put that `.ttf` file in `fonts/`
 
-### run
+### Run
 ```bash
-python txt.py
+streamlit run txt.py
 ```
 i usually add a tmux session to `~/.bashrc` to run the script on startup
 
