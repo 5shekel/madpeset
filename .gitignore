@@ -1,3 +1,5 @@
 /venv
 /cats_and_dogs_filtered
 log.log
+.env
+output.png
