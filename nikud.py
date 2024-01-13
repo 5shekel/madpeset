@@ -13,7 +13,7 @@ load_dotenv()
 api_key = os.getenv("API_KEY")
 
 # Specify the font size
-font_size = 40
+font_size = 80
 # font = ImageFont.truetype("fonts/BonaNova-Regular.ttf", font_size, encoding='unic')
 font = ImageFont.truetype("fonts/DejaVuSans.ttf", font_size)  # only one that works
 
@@ -93,7 +93,7 @@ def main():
                 line_width += word_width + 10  # Add word width and spacing
             else:
                 # Move to the next line
-                y += 40  # Move to the next line
+                y += font_size  # Move to the next line
                 line_width = 0  # Reset line width
 
                 # Check if the word fits in the new line
