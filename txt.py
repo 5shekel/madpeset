@@ -11,13 +11,16 @@ username = os.getlogin()
 parser = argparse.ArgumentParser(description="Image Generation and Printing")
 args = parser.parse_args()
 
+model="QL-550"
+printer_ql550="0x2016"
+label=62
 
 def camera():
     print("cam")
     webcam_command = (
         "fswebcam webcam.jpg ; "
-        "/home/{username}/.local/bin/brother_ql -b pyusb -m QL-550 "
-        "-p usb://0x04f9:0x2016 print -l 62 --dither webcam.jpg"
+        "/home/{username}/.local/bin/brother_ql -b pyusb -m {model} "
+        "-p usb://0x04f9:{printer_ql550} print -l {label} dither webcam.jpg"
     )
     subprocess.run(webcam_command, shell=True)
 
@@ -55,6 +58,7 @@ def map_to_keyboard_hebrew(input_text):
         '/': '.',
         '\/': ',',
         '@': '"',
+	'\'':'w'
         # Add any other characters you want to map
     }
     
@@ -118,10 +122,9 @@ while True:
         image.save("output.png")
 
         # Step 2: Print
-        printer_ql550 = "0x2016"
         printer_id1 = "000M6Z401370"
         command = (
-            f"/home/{username}/.local/bin/brother_ql -b pyusb --model QL-550 "
-            f"-p usb://0x04f9:{printer_ql550}/{printer_id1} print -l 62 output.png"
+            f"/home/{username}/.local/bin/brother_ql -b pyusb --model {model} "
+            f"-p usb://0x04f9:{printer_ql550}/{printer_id1} print -l {label} output.png"
         )
         subprocess.run(command, shell=True)
