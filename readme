@@ -5,7 +5,7 @@ git submodule update --init --recursive
 
 python -m venv venv
 source venv/bin/activate
-pip install pillow brother_ql
+pip install pillow==9.5.0 brother_ql
 ```
 to get the camera working, you need to install the drivers for the camera. I used the [official guide](https://www.raspberrypi.org/documentation/configuration/camera.md) to install the drivers.
 
@@ -13,10 +13,12 @@ if you use a webcam try
 ```bash
 sudo apt install fswebcam
 ```
+### Fonts
+im using google fonts, you can download them from [here](https://fonts.google.com/?subset=hebrew&noto.script=Hebr) and put that `.ttf` file in `fonts/`
 
-### run
+### Run
 ```bash
-python txt.py
+streamlit run txt.py
 ```
 i usually add a tmux session to `~/.bashrc` to run the script on startup
 
