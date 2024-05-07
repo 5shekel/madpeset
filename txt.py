@@ -89,17 +89,6 @@ def rtl_text_wrap(text, width):
     return '\n'.join(lines)
 
 
-def print_label(image_path, printer_ql550="0x2016", printer_id1="000M6Z401370"):
-    command = (
-        f"brother_ql -b pyusb --model QL-550 "
-        f"-p usb://0x04f9:{printer_ql550}/{printer_id1} print -l 62 {image_path}"
-    )
-    process = subprocess.run(command, shell=True, capture_output=True, text=True)
-    
-    if "The system cannot find the path specified." in process.stderr:
-        print("printer not connected")
-
-
 while True:
     user_input = input("Type something (or press + for camera): ")
     if user_input == "+":
