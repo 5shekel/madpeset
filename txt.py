@@ -58,8 +58,10 @@ def map_to_keyboard_hebrew(input_text):
         '/': '.',
         '\/': ',',
         '\;': ':',
+        'w': '\'',
+        'q': '/',
         '@': '"',
-	'\'':'w'
+	    '\'':'w'
         # Add any other characters you want to map
     }
     
