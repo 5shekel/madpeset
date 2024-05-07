@@ -19,7 +19,7 @@ def camera():
     print("cam")
     webcam_command = (
         "fswebcam webcam.jpg ; "
-        "/home/{username}/.local/bin/brother_ql -b pyusb -m {model} "
+        "brother_ql -b pyusb -m {model} "
         "-p usb://0x04f9:{printer_ql550} print -l {label} dither webcam.jpg"
     )
     subprocess.run(webcam_command, shell=True)
@@ -57,6 +57,7 @@ def map_to_keyboard_hebrew(input_text):
         'l': 'ך',
         '/': '.',
         '\/': ',',
+        '\;': ':',
         '@': '"',
 	'\'':'w'
         # Add any other characters you want to map
@@ -90,7 +91,7 @@ def rtl_text_wrap(text, width):
 
 def print_label(image_path, printer_ql550="0x2016", printer_id1="000M6Z401370"):
     command = (
-        f"/home/{username}/.local/bin/brother_ql -b pyusb --model QL-550 "
+        f"brother_ql -b pyusb --model QL-550 "
         f"-p usb://0x04f9:{printer_ql550}/{printer_id1} print -l 62 {image_path}"
     )
     process = subprocess.run(command, shell=True, capture_output=True, text=True)
@@ -127,7 +128,9 @@ while True:
         img_height = num_lines * line_height + 200
         image = Image.new('RGB', (img_width, img_height), 'white')
         d = ImageDraw.Draw(image)
-        text_width, text_height = d.textsize(wrapped_text, font=font)
+        text_bbox = d.textbbox((0, 0), wrapped_text, font=font)
+        text_width = text_bbox[2] - text_bbox[0]
+        text_height = text_bbox[3] - text_bbox[1]
         x = (img_width - text_width) // 2
         y = (img_height - text_height) // 2
 
@@ -137,7 +140,7 @@ while True:
         # Step 2: Print
         printer_id1 = "000M6Z401370"
         command = (
-            f"/home/{username}/.local/bin/brother_ql -b pyusb --model {model} "
+            f"brother_ql -b pyusb --model {model} "
             f"-p usb://0x04f9:{printer_ql550}/{printer_id1} print -l {label} output.png"
         )
         subprocess.run(command, shell=True)
